@@ -1,6 +1,5 @@
 //sne
 
-//THIS IS WRONG, CHECK FINAL CONDITIONAL! IT'S WRONG. 
 import Command from '../command_class'
 
 
@@ -18,37 +17,34 @@ export class Sne extends Command {
         return true;
     }
 
+    _compare(cond, processes, process_index) {
+        if (cond){
+            processes[process_index] += 2
+        }
+        else {
+            processes[process_index] += 1
+        }
+    }
+        
 	_call(processes, process_index, gen){
 		var acheck = this.get_true_index(a, a_am)
 		var bcheck = this.get_true_index(b, b_am)
 		switch(this.mod){
 			case 'A': 
-				if (this.memory_buffer[acheck].a != this.memory_buffer[bcheck].a){
-					processes[process_index] += 2
-				}
+				this._compare(this.memory_buffer[acheck].a != this.memory_buffer[bcheck].a, processes, process_index)
 				break
 			case 'B': 
-				if (this.memory_buffer[acheck].b != this.memory_buffer[bcheck].b){
-					processes[process_index] += 2
-				}
+				this._compare(this.memory_buffer[acheck].b != this.memory_buffer[bcheck].b, processes, process_index)
 				break
 			case 'AB':
-				if (this.memory_buffer[acheck].a != this.memory_buffer[bcheck].b){
-					processes[process_index] += 2
-				}
+				this._compare(this.memory_buffer[acheck].a != this.memory_buffer[bcheck].b, processes, process_index)
 				break
 			case 'BA':
-				if (this.memory_buffer[acheck].b != this.memory_buffer[bcheck].a){
-					processes[process_index] += 2
-				}
+				this._compare(this.memory_buffer[acheck].b != this.memory_buffer[bcheck].b, processes, process_index)
 				break
 			case 'I': case 'X': case 'F':
-                if !(this._equal(this.memory_buffer[acheck].a, this.memory_buffer[acheck].b, this.memory_buffer[bcheck].a, this.memory_buffer[bcheck].b)) {
-					processes[process_index] += 2
-				}
+                this._compare(this._equal(this.memory_buffer[acheck].a, this.memory_buffer[acheck].b, this.memory_buffer[bcheck].a, this.memory_buffer[bcheck].b), processes, process_index)
 				break
-			default :
-				processes[process_index] += 1 	
 		}
 		
 	}
