@@ -1,5 +1,10 @@
 
-//comand parent classe
+//comand parent class
+/*
+Below is the command parent class. It includes the get_true_index, pre, post, and both call methods. 
+Every single assembly instruction that we compiled into JS uses this command class as its parent, and 
+shares these methods, which we use to alter the memory matrix as needed.  
+*/
 class Command {
 	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
         while (a < 0) {
@@ -79,6 +84,16 @@ class Command {
 
 	_call(processes, process_index, gen){}
 }
+
+
+//All Instruction Child classes
+/*
+Below are the Instruction Child classes. These classes all include a constructor, and a _call method that takes 
+in the process, process list, and gen. The _call is called in the command class, and is for the assembly-related 
+purpose of each instruction command. The _call method, depending on the instruction, takes in instructional modifiers 
+with a switch statement, and augments the memory matrix accordingly. 
+*/
+
 
 //add
 class Add extends Command {
@@ -622,6 +637,17 @@ class Sub extends Command {
     }
 }
 
+
+
+
+
+// Setting up the matrix, running the simulation (game)
+/*
+Below we are setting up some functions that actually run the game, setup the memory matrix, initialize the players, their code, 
+their processes, and visualize the game's results / outputs.  
+*/
+
+
 function* gen(processes) {
     while (true) {
         for ([index, value] of processes.entries()) {
@@ -695,6 +721,12 @@ function print(memory) {
     process.stdout.write("]")
 }
 
+
+//code execution 
+/*
+Here we execute the functions above, give player one an imp for starters, and create a memory array of size 100 
+(80x smaller than officially.) Lots of debugging ahead.   
+*/
 memory_size = 100
 memory = init(memory_size)
 code = [[new Mov(0, 1, "$", "$", "I", memory, memory_size, 0)]]
