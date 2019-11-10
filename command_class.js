@@ -28,10 +28,12 @@ export class Command {
 				return (this.index + v) % this.memory_size
 				break
 			case '@': case '<': case '>':
-				return ((this.index + v) + this.memory_buffer[this.index+v].b) % this.memory_size
+                var new_index = (this.index + v) % this.memory_size
+				return (new_index + this.memory_buffer[new_index].b) % this.memory_size
 				break
 			case '*': case '{': case '}':		
-				return ((this.index + v) + this.memory_buffer[this.index+v].a) % this.memory_size
+                var new_index = (this.index + v) % this.memory_size
+				return (new_index + this.memory_buffer[new_index].a) % this.memory_size
 				break
 		}
 	}
@@ -39,29 +41,32 @@ export class Command {
 
 	pre(v, mod){
 		if (mod=='<'){
-			this.memory_buffer[this.index+v].b -= 1
-            if (this.memory_buffer[this.index + v].b < 0) {
-                this.memory_buffer[this.index + v].b += this.memory_size
+            if (this.memory_buffer[this.index + v].b == 0) {
+                this.memory_buffer[this.index+v].b = this.memory_size
+            {
+            else {
+                this.memory_buffer[this.index+v].b -= 1
             }
 		}
 		if (mod=='{'){
-			this.memory_buffer[this.index+v].a -= 1
-            if (this.memory_buffer[this.index + v].a < 0) {
-                this.memory_buffer[this.index + v].a += this.memory_size
+            if (this.memory_buffer[this.index + v].a == 0) {
+                this.memory_buffer[this.index+v].a = this.memory_size
+            {
+            else {
+                this.memory_buffer[this.index+v].a -= 1
             }
 		}
 	}
 
 	post(v,mod){
 		if (mod=='}'){
-			this.memory_buffer[this.index+v].a += 1
-			this.memory_buffer[this.index+v].a = this.memory_buffer[this.index + v].a % this.memory_size
+			this.memory_buffer[this.index+v].a = (this.memory_buffer[this.index + v].a + 1) % this.memory_size
 		}
 		if (mod=='>'){
-			this.memory_buffer[this.index+v].b += 1
-			this.memory_buffer[this.index+v].b = this.memory_buffer[this.index + v].b % this.memory_size
+			this.memory_buffer[this.index+v].b = (this.memory_buffer[this.index + v].b + 1) % this.memory_size
 		}
 	}
+
 	call(processes, process_index, gen){
 
 		this.pre(this.a, this.a_am)
