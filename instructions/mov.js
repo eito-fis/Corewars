@@ -21,10 +21,10 @@ export class Mov extends Command {
 				this.memory_buffer[destination].b = this.memory_buffer[source].b 
 				break
 			case 'AB':
-				this.memory_buffer[destination].a = this.memory_buffer[source].b
+				this.memory_buffer[destination].b = this.memory_buffer[source].a 
 				break
 			case 'BA':
-				this.memory_buffer[destination].b = this.memory_buffer[source].a 
+				this.memory_buffer[destination].a = this.memory_buffer[source].b
 				break
 			case 'I':
 				this.memory_buffer[destination] = this.memory_buffer[source]

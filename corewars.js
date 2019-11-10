@@ -1,40 +1,71 @@
-function* gen(player_list) {
+import Dat from "./instructions/dat.js"
+import Nop from "./instructions/nop.js"
+import Add from "./instructions/add.js"
+import Sub from "./instructions/sub.js"
+import Mul from "./instructions/mul.js"
+import Div from "./instructions/div.js"
+import Mod from "./instructions/mod.js"
+import Mov from "./instructions/mov.js"
+import Jmp from "./instructions/jmp.js"
+import Jmz from "./instructions/jmz.js"
+import Jmn from "./instructions/jmn.js"
+import Djn from "./instructions/djn.js"
+import Spl from "./instructions/spl.js"
+import Seq from "./instructions/seq.js"
+import Sne from "./instructions/sne.js"
+import Slt from "./instructions/slt.js"
+
+function* gen(processes) {
     while (true) {
-        for ([index, value] of player_list.entries()) {
-            yield [player_list, index]
+        for ([index, value] of processes.entries()) {
+            yield [processes, index]
         }
     }
 }
 
-
-
-memory_buffer = []
-memory_size = 5
-for (i = 0; i < memory_size; i++) {
-    memory_buffer.append(0)
-}
-
-player1 = [0, 1, 2]
-player2 = [0]
-all_players = [gen(player1), gen(player2)]
-
-game_length = 15
-for (i = 0; i < game_length; i++) {
-    for (p of all_players) {
-        [current_list, index] = p.next().value
-        address = current_list[index]
-
-        memory[address].call(current_list, index)
-
-        //current_list[index] = (index >= memory_size - 1) ? 0, current_list[index + 1]
-        // current_list[index] = (address + 1) % memory_size
-        console.log(current_list)
-        
-        // Handle splits
-        // if (value == 0) {
-        //      current_list.splice(index + 1, 0, 2)
-        //      p.next()
-        // }
+function init(memory_size) {
+    memory_buffer = []
+    for (i = 0; i < memory_size; i++) {
+        memory_buffer.append(new Dat(0, 0, "$", "$", "", memory_buffer, memory_size, i))
     }
+    return memory_buffer
 }
+
+function set_code(memory_buffer, code) {
+    start = Math.floor(Math.random() * (memory_buffer.length - 1))
+    for (i = 0; i < code.length; i++) {
+        address = (start + i) % memory_buffer.length
+        memory_buffer[address] = code[i]
+        code[i].index = address
+    }
+    return start
+}
+
+function make_players(memory_buffer, code_list) {
+    players = []
+    for (c of code_list) {
+        start = set_code(c)
+        players.append(gen([start]))
+    }
+    return players
+}
+
+function run(memory_buffer, players, game_length) {
+    console.log(memory_buffer)
+    for (i = 0; i < game_length; i++) {
+        for (p of players) {
+            [current_list, index] = p.next().value
+            address = current_list[index]
+
+            memory[address].call(current_list, index, p)
+        }
+    }
+    console.log(memory_buffer)
+}
+
+memory_buffer = init(memory_size)
+code = [[Mov(0, 1, "$", "$", "I", memory_buffer, memory_size, 0)]]
+all_players = make_players(memory_buffer, code)
+run(memory_buffer, all_players, 50)
+
 

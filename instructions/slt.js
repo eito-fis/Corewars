@@ -1,6 +1,5 @@
 //slt
 
-//THIS IS WRONG, CHECK FINAL CONDITIONAL! IT'S WRONG. 
 import Command from '../command_class'
 
 

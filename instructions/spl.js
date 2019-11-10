@@ -1,5 +1,4 @@
 //spl
-// EAMON CHECK THIS SHIT FRICKK
 
 
 import Command from '../command_class'
@@ -11,13 +10,12 @@ export class Spl extends Command {
 	}
 
 	_call(processes, process_index, gen){
-
 		// new branch
 		var destination_index = this.get_true_index(a, a_am)
 		processes.splice(process_index+1,0, destination_index)
 		processes[process_index] += 1
 		// continue on old shit
-		this.gen.next()
+		gen.next()
 	}
 }
 

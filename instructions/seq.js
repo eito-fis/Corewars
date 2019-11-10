@@ -11,6 +11,7 @@ export class Seq extends Command {
     _equal() {
         var len = arguments.length;
         for (var i = 1; i< len; i++) {
+            // a == b && b == c && c == d
             if (arguments[i] === null || arguments[i] !== arguments[i-1])
                 return false;
         }

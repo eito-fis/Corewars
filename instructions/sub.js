@@ -10,7 +10,7 @@ export class Sub extends Command {
 
     _sub(source, target){
         var ret = target - source
-        while ret < 0 {
+        if (ret < 0) {
             ret += this.memory_size
         }
         return ret
