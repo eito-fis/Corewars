@@ -3,8 +3,14 @@
 
 export class Command {
 	constructor(a, b, a_am, a_am, mod, memory_buffer, memory_size, index){
-		this.a = a
-		this.b = b
+        while a < 0 {
+            a += memory_size
+        }
+		this.a = a % memory_size
+        while b < 0 {
+            b += memory_size
+        }
+		this.b = b % memory_size
 		this.a_am = a_am
 		this.b_am = b_am
 		this.mod = mod
@@ -19,13 +25,13 @@ export class Command {
 				return this.index
 				break
 			case '$' : 
-				return this.index + v
+				return (this.index + v) % this.memory_size
 				break
 			case '@': case '<': case '>':
-				return this.memory_buffer[this.index+v].index + this.memory_buffer[this.index+v].b  
+				return ((this.index + v) + this.memory_buffer[this.index+v].b) % this.memory_size
 				break
 			case '*': case '{': case '}':		
-				return this.memory_buffer[this.index+v].index + this.memory_buffer[this.index+v].a 
+				return ((this.index + v) + this.memory_buffer[this.index+v].a) % this.memory_size
 				break
 		}
 	}
@@ -34,30 +40,38 @@ export class Command {
 	pre(v, mod){
 		if (mod=='<'){
 			this.memory_buffer[this.index+v].b -= 1
+            if (this.memory_buffer[this.index + v].b < 0) {
+                this.memory_buffer[this.index + v].b += this.memory_size
+            }
 		}
 		if (mod=='{'){
 			this.memory_buffer[this.index+v].a -= 1
+            if (this.memory_buffer[this.index + v].a < 0) {
+                this.memory_buffer[this.index + v].a += this.memory_size
+            }
 		}
 	}
 
 	post(v,mod){
 		if (mod=='}'){
 			this.memory_buffer[this.index+v].a += 1
+			this.memory_buffer[this.index+v].a = this.memory_buffer[this.index + v].a % this.memory_size
 		}
 		if (mod=='>'){
 			this.memory_buffer[this.index+v].b += 1
+			this.memory_buffer[this.index+v].b = this.memory_buffer[this.index + v].b % this.memory_size
 		}
 	}
-	call(processes, process_index){
+	call(processes, process_index, gen){
 
 		this.pre(this.a, this.a_am)
 		this.pre(this.b, this.b_am)
 
-		this._call(processes, process_index)
+		this._call(processes, process_index, gen)
 		
 		this.post(this.a, this.a_am)
 		this.post(this.b, this.b_am)
 
 
-	_call(processes, process_index){}
+	_call(processes, process_index, gen){}
 }
