@@ -21,19 +21,22 @@ export class Command {
 				return this.index + v
 				break
 			case '@': case '<': case '>':
-				if (mod=='<'){
-					this.memory_buffer[this.index+v].b -= 1
-				}
 				return this.memory_buffer[this.index+v].index + this.memory_buffer[this.index+v].b  
 				break
-			case '*': case '{': case '}':
-				if (mod=='{'){
-					this.memory_buffer[this.index+v].a -= 1
-				}
+			case '*': case '{': case '}':		
 				return this.memory_buffer[this.index+v].index + this.memory_buffer[this.index+v].a 
 				break
 		}
+	}
 
+
+	pre(v, mod){
+		if (mod=='<'){
+			this.memory_buffer[this.index+v].b -= 1
+		}
+		if (mod=='{'){
+			this.memory_buffer[this.index+v].a -= 1
+		}
 	}
 
 	post(v,mod){
@@ -44,11 +47,16 @@ export class Command {
 			this.memory_buffer[this.index+v].b += 1
 		}
 	}
-	call(){
-		this._call()
+	call(processes, process_index){
+
+		this.pre(this.a, this.a_am)
+		this.pre(this.b, this.b_am)
+
+		this._call(processes, process_index)
+		
 		this.post(this.a, this.a_am)
 		this.post(this.b, this.b_am)
 
 
-	_call(){}
+	_call(processes, process_index){}
 }
