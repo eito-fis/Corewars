@@ -1,0 +1,39 @@
+//djn
+
+import Command from '../command_class'
+
+
+export class Djn extends Command {
+	constructor(a, b, a_am, b_am, mod, memory_buffer, memory_size, index){
+		super(a, b, a_am, b_am, mod, memory_buffer, memory_size, index)
+	}
+
+	_call(processes, process_index, gen){
+		var destination_index = this.get_true_index(a, a_am)
+		var check = this.get_true_index(b, b_am)
+		switch(this.mod){
+			case 'A': case 'BA':
+				this.memory_buffer[check].a -= 1
+				if (this.memory_buffer[check].a != 0){
+					processes[process_index] = destination_index
+				}
+				break
+			case 'B': case 'AB':
+				this.memory_buffer[check].b -= 1
+				if (this.memory_buffer[check].b != 0){
+					processes[process_index] = destination_index
+				}
+				break
+			case 'I': case 'X': case 'F':
+				this.memory_buffer[check].a -= 1
+				this.memory_buffer[check].b -= 1
+				if (this.memory_buffer[check].a != 0 || this.memory_buffer[check].b != 0){
+					processes[process_index] = destination_index
+				}
+				break
+			default :
+				processes[process_index] += 1 	
+		}
+		
+	}
+}
