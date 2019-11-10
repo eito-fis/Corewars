@@ -2,13 +2,14 @@
 
 
 export class Command {
-	constructor(a, b, a_am, a_am, mod, memory_buffer, index){
+	constructor(a, b, a_am, a_am, mod, memory_buffer, memory_size, index){
 		this.a = a
 		this.b = b
 		this.a_am = a_am
 		this.b_am = b_am
 		this.mod = mod
 		this.memory_buffer = memory_buffer
+		this.memory_size = memory_size
 		this.index = index
 	}
 
