@@ -1,7 +1,7 @@
 //comand parent classe
 
 
-class Command {
+export class Command {
 	constructor(a, b, a_am, a_am, mod, memory_buffer, index){
 		this.a = a
 		this.b = b
@@ -51,7 +51,4 @@ class Command {
 
 
 	_call(){}
-
-
-
 }
