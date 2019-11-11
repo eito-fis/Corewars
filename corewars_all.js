@@ -108,7 +108,7 @@ class Add extends Command {
 
 	_call(processes, process_index){
         var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_bm)
+        var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case "A":
                 this.memory[dest].a = this._add(this.memory[source].a, this.memory[dest].a)
@@ -683,6 +683,33 @@ function make_players(memory, code_list) {
     return players
 }
 
+function print(memory, row_length) {
+    pretty_print = []
+    for (m of memory) {
+
+        if (m instanceof Mov)
+        {
+            pretty_print.push(1)
+        } else if(m instanceof Jmp){
+            pretty_print.push(2)
+        } else if (m instanceof Add) {
+            pretty_print.push(3)
+        } else {pretty_print.push(0)}
+    }
+
+    process.stdout.write("[")
+    for (i = 1; i <= pretty_print.length; i++) {
+        process.stdout.write(String(pretty_print[i - 1]) + ", ")
+        if ((i % row_length) == 0) {
+            process.stdout.write("]")
+            console.log()
+            process.stdout.write("[")
+        }
+    }
+    process.stdout.write("]")
+
+}
+
 function run(memory, players, game_length) {
     for (i = 0; i < game_length; i++) {
         // print(memory)
@@ -693,33 +720,12 @@ function run(memory, players, game_length) {
 
             memory[address].call(current_list, index, p)
         }
+        console.log(i)
     }
-    print(memory)
+    print(memory, 10)
+    console.log('completed')
 }
 
-function print(memory) {
-    pretty_print = []
-    for (m of memory) {
-        if (m instanceof Mov) {
-            pretty_print.push(1)
-        }
-        else {
-            pretty_print.push(0)
-        }
-    }
-    row_length = 10
-
-    process.stdout.write("[")
-    for (i = 1; i <= pretty_print.length; i++) {
-        process.stdout.write(String(pretty_print[i - 1]) + ", ")
-        if (i % 10 == 0) {
-            process.stdout.write("]")
-            console.log()
-            process.stdout.write("[")
-        }
-    }
-    process.stdout.write("]")
-}
 
 
 //code execution 
@@ -729,6 +735,26 @@ Here we execute the functions above, give player one an imp for starters, and cr
 */
 memory_size = 100
 memory = init(memory_size)
-code = [[new Mov(0, 1, "$", "$", "I", memory, memory_size, 0)]]
+player1_code = [new Mov(0, 1, "$", "$", "I", memory, memory_size, 0)] // array of commands
+player2_code = [new Add(4, 3, '#','$', 'AB', memory, memory_size, 17),
+    new Mov(2, 2, "$", "@", "I", memory, memory_size, 18),
+    new Jmp(-2, 0,'$', '$', '', memory, memory_size, 19 ),
+    new Dat(0, 0, '$', '$', '', memory, memory_size, 20),]
+
+code = [player1_code, player2_code]
 all_players = make_players(memory, code)
+
+
+console.log(all_players)
+
+
 run(memory, all_players, 50)
+
+
+//player 2 code
+/*
+ADD #4, 3        ; execution begins here
+MOV 2, @2
+JMP -2
+DAT #0, #0
+ */
