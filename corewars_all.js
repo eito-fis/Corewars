@@ -1,12 +1,12 @@
 
-//comand parent class
+//Comand parent class
 /*
 Below is the command parent class. It includes the get_true_index, pre, post, and both call methods. 
 Every single assembly instruction that we compiled into JS uses this command class as its parent, and 
 shares these methods, which we use to alter the memory matrix as needed.  
 */
 class Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
         while (a < 0) {
             a += memory_size
         }
@@ -20,8 +20,14 @@ class Command {
 		this.mod = mod
 		this.memory = memory
 		this.memory_size = memory_size
-		this.index = index
+		this.index = 0
+        this.player_id = -1
 	}
+
+    init(index, player_id) {
+        this.index = index
+        this.player_id = player_id
+    }
 
 	get_true_index(v, mod) {
 		switch(mod){
@@ -97,8 +103,8 @@ with a switch statement, and augments the memory matrix accordingly.
 
 //add
 class Add extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _add(source, target){
@@ -137,8 +143,8 @@ class Add extends Command {
 
 //dat
 class Dat extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
 	_call(processes, process_index, gen){
@@ -148,8 +154,8 @@ class Dat extends Command {
 
 //div
 class Div extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
         this._flag = false
 	}
 
@@ -196,8 +202,8 @@ class Div extends Command {
 
 //djn
 class Djn extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _cond(cond, processes, process_index) {
@@ -233,8 +239,8 @@ class Djn extends Command {
 
 //jmn
 class Jmn extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _cond(cond, processes, process_index) {
@@ -266,8 +272,8 @@ class Jmn extends Command {
 
 //jmp
 class Jmp extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
 	_call(processes, process_index, gen){
@@ -278,8 +284,8 @@ class Jmp extends Command {
 
 //jmz
 class Jmz extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _cond(cond, processes, process_index) {
@@ -311,8 +317,8 @@ class Jmz extends Command {
 
 //mod
 class Mod extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
         this._flag = false
 	}
 
@@ -359,8 +365,8 @@ class Mod extends Command {
 
 //mov
 class Mov extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
 	_call(processes, process_index, gen){
@@ -402,8 +408,8 @@ class Mov extends Command {
 
 //mul
 class Mul extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _mul(source, target){
@@ -442,8 +448,8 @@ class Mul extends Command {
 
 //seq
 class Seq extends Command {
-    constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-        super(a, b, a_am, b_am, mod, memory, memory_size, index)
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
     }
 
     _equal() {
@@ -470,16 +476,16 @@ class Seq extends Command {
         var bcheck = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case 'A': 
-                this._compare((this.memory[acheck].a == this.memory[bcheck].a), processes_process, index)
+                this._compare((this.memory[acheck].a == this.memory[bcheck].a), processes, process_index)
                 break
             case 'B': 
-                this._compare((this.memory[acheck].b == this.memory[bcheck].b), processes_process, index)
+                this._compare((this.memory[acheck].b == this.memory[bcheck].b), processes, process_index)
                 break
             case 'AB':
-                this._compare((this.memory[acheck].a == this.memory[bcheck].b), processes_process, index)
+                this._compare((this.memory[acheck].a == this.memory[bcheck].b), processes, process_index)
                 break
             case 'BA':
-                this._compare((this.memory[acheck].b == this.memory[bcheck].a), processes_process, index)
+                this._compare((this.memory[acheck].b == this.memory[bcheck].a), processes, process_index)
                 break
             case 'I': case 'X': case 'F':
                 this._compare(this._equal(this.memory[acheck].a, this.memory[acheck].b, this.memory[bcheck].a, this.memory[bcheck].b), processes, process_index)
@@ -491,8 +497,8 @@ class Seq extends Command {
 
 //slt
 class Slt extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
 	_compare(cond, processes, process_index) {
@@ -525,14 +531,13 @@ class Slt extends Command {
 				processes[process_index] = (processes[process_index] + 1) % this.memory_size
 				break
 		}
-		
 	}
 }
 
 //sne
 class Sne extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _equal() {
@@ -579,8 +584,8 @@ class Sne extends Command {
 
 //spl
 class Spl extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
 	_call(processes, process_index, gen){
@@ -595,8 +600,8 @@ class Spl extends Command {
 
 //sub
 class Sub extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size, index){
-		super(a, b, a_am, b_am, mod, memory, memory_size, index)
+	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
     _sub(source, target){
@@ -664,20 +669,21 @@ function init(memory_size) {
     return memory
 }
 
-function set_code(memory, code) {
+function set_code(memory, code, player_id) {
     start = Math.floor(Math.random() * (memory.length - 1))
     for (i = 0; i < code.length; i++) {
         address = (start + i) % memory.length
         memory[address] = code[i]
-        code[i].index = address
+        code[i].init(address, player_id)
     }
     return start
 }
 
 function make_players(memory, code_list) {
     players = []
-    for (c of code_list) {
-        start = set_code(memory, c)
+    for (var i = 0; i < code_list.length, i++) {
+        start = set_code(memory, code_list[i], i)
+        // Start new process where code was written
         players.push(gen([start]))
     }
     return players
@@ -686,7 +692,6 @@ function make_players(memory, code_list) {
 function print(memory, row_length) {
     pretty_print = []
     for (m of memory) {
-
         if (m instanceof Mov)
         {
             pretty_print.push(1)
