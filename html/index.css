@@ -21,3 +21,15 @@
 html {
 	scroll-behavior: smooth;
 }
+
+
+.cap-1 {
+	color: white; /*#687C7D*/
+}
+
+.cap-2 {
+	color: black;
+}
+.cap-3 {
+	color: #687C7D;
+}
