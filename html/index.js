@@ -858,8 +858,11 @@ $(function(){
     // }
 
     game_length = 1000
+    var i = -1
     players = all_players
     function run() {
+        if (i = -1)
+            i = game_length
         setTimeout(function() {
             for (var p = 0; p < players.length; p++) {
                 [current_list, index] = players[p].next().value
@@ -869,8 +872,10 @@ $(function(){
                 ctx.clearRect(0, 0, c.width,c.height);
                 updateCanvas(memory)
             }
-            if (--game_length)
+            if (--i)
                   run()
+            else
+                i = -1
         }, 100)
     }
 
