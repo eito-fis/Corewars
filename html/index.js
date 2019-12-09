@@ -680,10 +680,15 @@ function check_memory(memory, start, code_len) {
 
 function set_code(memory, code, player_id) {
     // Find a starting location that doesn't overlap with player code
-    start = Math.floor(Math.random() * (memory.length - 1))
-    while (!check_memory(memory, start, code.length)) {
-        start = Math.floor(Math.random() * (memory.length - 1))
-    }
+    // start = Math.floor(Math.random() * (memory.length - 1))
+    // while (!check_memory(memory, start, code.length)) {
+    //     start = Math.floor(Math.random() * (memory.length - 1))
+    // }
+    console.log(player_id)
+    if (player_id == 0)
+        start = 0
+    else if (player_id == 1)
+        start = 2
 
     for (i = 0; i < code.length; i++) {
         address = (start + i) % memory.length
@@ -745,41 +750,6 @@ MOV 2, @2
 JMP -2
 DAT #0, #0
  */
-
-// SETTING UP CLASSES
-
-//class Byte {
-//    constructor(){
-//        this.playerID =  Math.floor(Math.random()*2)
-//    }
-//    transform(){
-//        this.playerID =  Math.floor(Math.random()*2)
-//    }
-//}
-
-//class Bit {
-//    constructor(){
-//        //simulates player id
-//        this.playerID =  Math.floor(Math.random()*2)
-//    }
-//    transform(){
-//        this.playerID =  Math.floor(Math.random()*2)
-//    }
-//}
-
-//class Bote {
-//    constructor(){
-//        this.playerID = Math.floor(Math.random()*2)
-//    }
-
-//    transform(){
-//        this.playerID = Math.floor(Math.random()*2)
-//    }
-//}
-
-
-// SETTING UP MATRIX
-
 $(function(){
     // var memory_length = 8000
     // var memory = []
@@ -813,7 +783,7 @@ $(function(){
     */  
     function updateCanvas(memory){
         var count = 0
-        console.log(memory)
+        // console.log(memory)
         for (var w_inc=0; w_inc<wn; w_inc++){
             for (var h_inc=0; h_inc<hn; h_inc++){
                 // console.log(memory[count])
@@ -859,23 +829,28 @@ $(function(){
 
     game_length = 1000
     var i = -1
+    var p = -1
     players = all_players
     function run() {
-        if (i = -1)
+        if (i == -1)
             i = game_length
+        if (p == -1 || p == players.length - 1)
+            p = 0
+        else
+            p += 1
         setTimeout(function() {
-            for (var p = 0; p < players.length; p++) {
-                [current_list, index] = players[p].next().value
-                address = current_list[index]
+            [current_list, index] = players[p].next().value
+            address = current_list[index]
 
-                memory[address].call(current_list, index, players[p], p)
-                ctx.clearRect(0, 0, c.width,c.height);
-                updateCanvas(memory)
-            }
+            memory[address].call(current_list, index, players[p], p)
+            ctx.clearRect(0, 0, c.width,c.height);
+            updateCanvas(memory)
             if (--i)
                   run()
-            else
+            else {
                 i = -1
+                p = -1
+            }
         }, 100)
     }
 
