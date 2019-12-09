@@ -105,7 +105,7 @@ class Add extends Command {
 	constructor(a, b, a_am, b_am, mod, memory, memory_size){
 		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
-
+ 
     _add(source, target){
         var ret = target + source
         return ret % this.memory_size
@@ -132,8 +132,10 @@ class Add extends Command {
                 this.memory[dest].b = this._add(this.memory[source].b, this.memory[dest].b)
                 break
             case "X":
-                this.memory[dest].a = this._add(this.memory[source].b, this.memory[dest].a)
-                this.memory[dest].b = this._add(this.memory[source].a, this.memory[dest].b)
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
+                this.memory[dest].a = this._add(s_b, d_a)
+                this.memory[dest].b = this._add(s_a, d_b)
                 break
         }
         processes[process_index] = (processes[process_index] + 1) % this.memory_size 
@@ -169,7 +171,7 @@ class Div extends Command {
 
 	_call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_bm)
+        var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case "A":
                 this.memory[dest].a = this._div(this.memory[source].a, this.memory[dest].a, processes, process_index)
@@ -188,8 +190,10 @@ class Div extends Command {
                 this.memory[dest].b = this._div(this.memory[source].b, this.memory[dest].b, processes, process_index)
                 break
             case "X":
-                this.memory[dest].a = this._div(this.memory[source].b, this.memory[dest].a, processes, process_index)
-                this.memory[dest].b = this._div(this.memory[source].a, this.memory[dest].b, processes, process_index)
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
+                this.memory[dest].a = this._div(s_b, d_a, processes, process_index)
+                this.memory[dest].b = this._div(s_a, d_b, processes, process_index)
                 break
         }
         if (!this._flag) {
@@ -205,9 +209,9 @@ class Djn extends Command {
 		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
-    _cond(cond, processes, process_index) {
+    _cond(cond, processes, process_index, dest) {
         if (cond) {
-            processes[process_index] = destination_index
+            processes[process_index] = dest
         }
         else {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size 	
@@ -215,21 +219,29 @@ class Djn extends Command {
     }
 
 	_call(processes, process_index, gen, p){
-		var destination_index = this.get_true_index(this.a, this.a_am)
+		var dest = this.get_true_index(this.a, this.a_am)
 		var check = this.get_true_index(this.b, this.b_am)
 		switch(this.mod){
 			case 'A': case 'BA':
 				this.memory[check].a -= 1
-				this._cond((this.memory[check].a != 0), processes, process_index)
+                if (this.memory[check].a < 0)
+                    this.memory[check].a += this.memory_size
+				this._cond((this.memory[check].a != 0), processes, process_index, dest)
 				break
 			case 'B': case 'AB':
 				this.memory[check].b -= 1
-				this._cond((this.memory[check].b != 0), processes, process_index)
+                if (this.memory[check].b < 0)
+                    this.memory[check].b += this.memory_size
+				this._cond((this.memory[check].b != 0), processes, process_index, dest)
 				break
 			case 'I': case 'X': case 'F':
 				this.memory[check].a -= 1
 				this.memory[check].b -= 1
-				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index)
+                if (this.memory[check].a < 0)
+                    this.memory[check].a += this.memory_size
+                if (this.memory[check].b < 0)
+                    this.memory[check].b += this.memory_size
+				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
 				break
 		}
 		
@@ -242,9 +254,9 @@ class Jmn extends Command {
 		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
-    _cond(cond, processes, process_index) {
+    _cond(cond, processes, process_index, dest) {
         if (cond) {
-            processes[process_index] = destination_index
+            processes[process_index] = dest
         }
         else {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size 	
@@ -252,17 +264,17 @@ class Jmn extends Command {
     }
 
 	_call(processes, process_index, gen, p){
-		var destination_index = this.get_true_index(this.a, this.a_am)
+		var dest = this.get_true_index(this.a, this.a_am)
 		var check = this.get_true_index(this.b, this.b_am)
 		switch(this.mod){
 			case 'A': case 'BA':
-				this._cond((this.memory[check].a != 0), processes, process_index)
+				this._cond((this.memory[check].a != 0), processes, process_index, dest)
 				break
 			case 'B': case 'AB':
-				this._cond((this.memory[check].b != 0), processes, process_index)
+				this._cond((this.memory[check].b != 0), processes, process_index, dest)
 				break
 			case 'I': case 'X': case 'F':
-				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index)
+				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
 				break
 		}
 		
@@ -287,9 +299,9 @@ class Jmz extends Command {
 		super(a, b, a_am, b_am, mod, memory, memory_size)
 	}
 
-    _cond(cond, processes, process_index) {
+    _cond(cond, processes, process_index, dest) {
         if (cond) {
-            processes[process_index] = destination_index
+            processes[process_index] = dest
         }
         else {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size 	
@@ -297,17 +309,17 @@ class Jmz extends Command {
     }
 
 	_call(processes, process_index, gen, p){
-		var destination_index = this.get_true_index(this.a, this.a_am)
+		var dest = this.get_true_index(this.a, this.a_am)
 		var check = this.get_true_index(this.b, this.b_am)
 		switch(this.mod){
 			case 'A': case 'BA':
-				this._cond((this.memory[check].a == 0), processes, process_index)
+				this._cond((this.memory[check].a == 0), processes, process_index, dest)
 				break
 			case 'B': case 'AB':
-				this._cond((this.memory[check].b == 0), processes, process_index)
+				this._cond((this.memory[check].b == 0), processes, process_index, dest)
 				break
 			case 'I': case 'X': case 'F':
-				this._cond((this.memory[check].a == 0 && this.memory[check].b == 0), processes, process_index)
+				this._cond((this.memory[check].a == 0 && this.memory[check].b == 0), processes, process_index, dest)
 				break
 		}
 		
@@ -332,7 +344,7 @@ class Mod extends Command {
 
 	_call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_bm)
+        var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case "A":
                 this.memory[dest].a = this._mod(this.memory[source].a, this.memory[dest].a, processes, process_index)
@@ -351,8 +363,10 @@ class Mod extends Command {
                 this.memory[dest].b = this._mod(this.memory[source].b, this.memory[dest].b, processes, process_index)
                 break
             case "X":
-                this.memory[dest].a = this._mod(this.memory[source].b, this.memory[dest].a, processes, process_index)
-                this.memory[dest].b = this._mod(this.memory[source].a, this.memory[dest].b, processes, process_index)
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
+                this.memory[dest].a = this._mod(s_b, d_a, processes, process_index)
+                this.memory[dest].b = this._mod(s_a, d_b, processes, process_index)
                 break
         }
         if (!this._flag) {
@@ -396,8 +410,9 @@ class Mov extends Command {
 				this.memory[destination].b = this.memory[source].b
 				break
 			case 'X':
-				this.memory[destination].a = this.memory[source].b 
-				this.memory[destination].b = this.memory[source].a
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+				this.memory[destination].a = s_b
+				this.memory[destination].b = s_a
 				break
 		}
 		// incrementing by one, after the move
@@ -419,7 +434,7 @@ class Mul extends Command {
 
 	_call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_bm)
+        var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case "A":
                 this.memory[dest].a = this._mul(this.memory[source].a, this.memory[dest].a)
@@ -438,8 +453,10 @@ class Mul extends Command {
                 this.memory[dest].b = this._mul(this.memory[source].b, this.memory[dest].b)
                 break
             case "X":
-                this.memory[dest].a = this._mul(this.memory[source].b, this.memory[dest].a)
-                this.memory[dest].b = this._mul(this.memory[source].a, this.memory[dest].b)
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
+                this.memory[dest].a = this._mul(s_b, d_a)
+                this.memory[dest].b = this._mul(s_a, d_b)
                 break
         }
         processes[process_index] = (processes[process_index] + 1) % this.memory_size 
@@ -606,15 +623,14 @@ class Sub extends Command {
 
     _sub(source, target){
         var ret = target - source
-        if (ret < 0) {
+        if (ret < 0)
             ret += this.memory_size
-        }
         return ret
     }
 
 	_call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
-        var dest = this.get_true_index(this.b, this.b_bm)
+        var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
             case "A":
                 this.memory[dest].a = this._sub(this.memory[source].a, this.memory[dest].a)
@@ -633,8 +649,10 @@ class Sub extends Command {
                 this.memory[dest].b = this._sub(this.memory[source].b, this.memory[dest].b)
                 break
             case "X":
-                this.memory[dest].a = this._sub(this.memory[source].b, this.memory[dest].a)
-                this.memory[dest].b = this._sub(this.memory[source].a, this.memory[dest].b)
+                let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
+                let [d_a, d_b] = [this.memory[dest].a, this.memory[dest].b]
+                this.memory[dest].a = this._sub(s_b, d_a)
+                this.memory[dest].b = this._sub(s_a, d_b)
                 break
 
         processes[process_index] = (processes[process_index] + 1) % this.memory_size 
@@ -654,7 +672,7 @@ their processes, and visualize the game's results / outputs.
 
 
 function* gen(processes) {
-    while (true) {
+    while (processes.length > 0) {
         for ([index, value] of processes.entries()) {
             yield [processes, index]
         }
@@ -662,7 +680,7 @@ function* gen(processes) {
 }
 
 function init(memory_size) {
-    memory = []
+    var memory = []
     for (i = 0; i < memory_size; i++) {
         memory.push(new Dat(0, 0, "$", "$", "", memory, memory_size))
         memory[memory.length - 1].init(i, -1)
@@ -684,11 +702,11 @@ function set_code(memory, code, player_id) {
     // while (!check_memory(memory, start, code.length)) {
     //     start = Math.floor(Math.random() * (memory.length - 1))
     // }
-    console.log(player_id)
+    // console.log(player_id)
     if (player_id == 0)
         start = 0
     else if (player_id == 1)
-        start = 2
+        start = 3
 
     for (i = 0; i < code.length; i++) {
         address = (start + i) % memory.length
@@ -853,6 +871,31 @@ $(function(){
             }
         }, 100)
     }
+    //Testing
+    function test(mode, memory) {
+        var memory = init(memory_size)
+        var test_code = [
+            new Mul(3, 2, '#','#', mode, memory, memory_size),
+            new Dat(5, 6, '$', '$', '', memory, memory_size),
+            new Dat(5, 11, '$', '$', '', memory, memory_size)
+        ]
+        var code = [test_code]
+        var players = make_players(memory, code)
+        var [current_list, index] = players[0].next().value
+        address = current_list[index]
+        memory[address].call(current_list, index, players[0], 0)
+        console.log(memory.slice(0,test_code.length + 1))
+        // var [current_list, index] = players[0].next().value
+        // console.log(current_list[0])
+    }
+
+    test('A')
+    test('B')
+    test('BA')
+    test('AB')
+    test('F')
+    test('X')
+    test('I')
 
     $("#run_button").click(run)
 })
