@@ -1,6 +1,6 @@
 //mul
 
-import Command from '../command_class'
+var Command = require('../command_class')
 
 
 export class Mul extends Command {

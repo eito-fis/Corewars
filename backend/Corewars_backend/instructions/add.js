@@ -1,7 +1,6 @@
 //add
 
-import Command from '../command_class'
-
+var Command = require('../command_class')
 
 export class Add extends Command {
 	constructor(a, b, a_am, b_am, mod, memory_buffer, memory_size, index){

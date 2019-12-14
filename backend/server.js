@@ -81,9 +81,7 @@ app.use(cors())
 app.use(express.json())
 
 
-const uri = process.env.ATLAS_URI
-
-
+//setting up MONGODB
 
 const MongoClient = require('mongodb').MongoClient;
 const uri = process.env.ATLAS_URI // make sure to set this value
@@ -92,10 +90,6 @@ client.connect(err => {
     const collection = client.db("test").collection("devices");
     client.close();
 });
-
-//fix the mongodb implementation
-// perform actions on the collection object
-//examples below
 
 
 

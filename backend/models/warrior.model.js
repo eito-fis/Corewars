@@ -5,11 +5,13 @@ const Schema = mongoose.Schema
 //every single user has this thing.
 const warriorSchema = new Schema({
     list: {type:Array, required: true},
-    update: {type: Date, required: true}
-})
+    updatedDate: {type: Date, required: true}
+    },
+    {timestamps: true,}
+    )
 
 
 
 
-const Warrior = mongoose.model('WarriorList', warriorSchema)
+const Warrior = mongoose.model('Warrior', warriorSchema)
 module.exports = Warrior

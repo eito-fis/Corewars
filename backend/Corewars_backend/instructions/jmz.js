@@ -1,6 +1,6 @@
 //jmz
 
-import Command from '../command_class'
+var Command = require('../command_class')
 
 
 export class Jmz extends Command {

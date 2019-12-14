@@ -1,4 +1,4 @@
-//comand parent classe
+//comand parent class
 
 
 export class Command {
@@ -67,19 +67,19 @@ export class Command {
 		}
 	}
 
-	call(processes, process_index, gen){
+	call(processes, process_index, gen) {
 
 		this.pre(this.a, this.a_am)
 		this.pre(this.b, this.b_am)
 
 		this._call(processes, process_index, gen)
-		
+
 		this.post(this.a, this.a_am)
 		this.post(this.b, this.b_am)
-
-
-	_call(processes, process_index, en){
-			return null;
-		}
 	}
+
+
+	_call(processes, process_index, en){}
 }
+
+module.exports = Command

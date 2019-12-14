@@ -15,6 +15,7 @@ import Seq from "./instructions/seq.js"
 import Sne from "./instructions/sne.js"
 import Slt from "./instructions/slt.js"
 
+
 function* gen(processes) {
     while (true) {
         for ([index, value] of processes.entries()) {

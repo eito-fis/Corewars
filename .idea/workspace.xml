@@ -2,11 +2,25 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6b45edb-62ac-43de-b093-99ac24fcb416" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/backend/models/collection.model.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/backend/routes/auth.js" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/backend/routes/index.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/backend/.env" beforeDir="false" afterPath="$PROJECT_DIR$/backend/.env" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/command_class.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/command_class.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/add.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/add.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/dat.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/dat.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/div.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/div.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/djn.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/djn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmn.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmn.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmp.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmp.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmz.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/jmz.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mod.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mod.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mov.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mov.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mul.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/mul.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/seq.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/seq.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/slt.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/slt.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/sne.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/sne.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/spl.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/spl.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/Corewars_backend/instructions/sub.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/Corewars_backend/instructions/sub.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/models/warrior.model.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/models/warrior.model.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -78,7 +92,7 @@
       <updated>1573449534554</updated>
       <workItem from="1573449535989" duration="4616000" />
       <workItem from="1573661038872" duration="1459000" />
-      <workItem from="1576271009954" duration="5376000" />
+      <workItem from="1576271009954" duration="8365000" />
     </task>
     <task id="LOCAL-00001" summary="reorganized file structure, NPM installed a number of express middleware packages, began work on backend webapp stucture.">
       <created>1576274041431</created>
@@ -87,7 +101,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576274041431</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Started building backend for webapp (models, routes), configured Auth0 and mongodb (added to .env file).">
+      <created>1576298873838</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1576298873838</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -109,6 +130,7 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="reorganized file structure, NPM installed a number of express middleware packages, began work on backend webapp stucture." />
-    <option name="LAST_COMMIT_MESSAGE" value="reorganized file structure, NPM installed a number of express middleware packages, began work on backend webapp stucture." />
+    <MESSAGE value="Started building backend for webapp (models, routes), configured Auth0 and mongodb (added to .env file)." />
+    <option name="LAST_COMMIT_MESSAGE" value="Started building backend for webapp (models, routes), configured Auth0 and mongodb (added to .env file)." />
   </component>
 </project>
