@@ -78,6 +78,8 @@ export class Command {
 		this.post(this.b, this.b_am)
 
 
-	_call(processes, process_index, en){}
+	_call(processes, process_index, en){
+			return null;
+		}
 	}
 }
