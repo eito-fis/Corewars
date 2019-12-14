@@ -2,12 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c6b45edb-62ac-43de-b093-99ac24fcb416" name="Default Changelist" comment="fixed imports for instruction classes, debugged corewars code">
-      <change afterPath="$PROJECT_DIR$/.idea/Corewars.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/backend/server.js" beforeDir="false" afterPath="$PROJECT_DIR$/backend/server.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,7 +75,7 @@
       <updated>1573449534554</updated>
       <workItem from="1573449535989" duration="4616000" />
       <workItem from="1573661038872" duration="1459000" />
-      <workItem from="1576271009954" duration="9785000" />
+      <workItem from="1576271009954" duration="10082000" />
     </task>
     <task id="LOCAL-00001" summary="reorganized file structure, NPM installed a number of express middleware packages, began work on backend webapp stucture.">
       <created>1576274041431</created>
