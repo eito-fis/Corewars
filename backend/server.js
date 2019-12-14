@@ -72,9 +72,16 @@ passport.deserializeUser((user, done) => {
     done(null, user);
 })
 
-// adding a route, using the route
+// Creating custom middleware with Express
+app.use((req, res, next) => {
+    res.locals.isAuthenticated = req.isAuthenticated();
+    next();
+});
+
+// ROUTING
 
 app.use(userInViews())
+
 app.use('/', authRouter)
 app.use('/', indexRouter)
 app.use('/', userRouter)
