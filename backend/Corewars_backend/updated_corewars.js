@@ -5,89 +5,89 @@ Every single assembly instruction that we compiled into JS uses this command cla
 shares these methods, which we use to alter the memory matrix as needed.  
 */
 class Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
         while (a < 0) {
             a += memory_size
         }
-		this.a = a % memory_size
+        this.a = a % memory_size
         while (b < 0) {
             b += memory_size
         }
-		this.b = b % memory_size
-		this.a_am = a_am
-		this.b_am = b_am
-		this.mod = mod
-		this.memory = memory
-		this.memory_size = memory_size
-		this.index = 0
+        this.b = b % memory_size
+        this.a_am = a_am
+        this.b_am = b_am
+        this.mod = mod
+        this.memory = memory
+        this.memory_size = memory_size
+        this.index = 0
         this.player_id = -1
-	}
+    }
 
     init(index, player_id) {
         this.index = index
         this.player_id = player_id
     }
 
-	get_true_index(v, mod) {
-		switch(mod){
-			case '#':
-				return this.index
-				break
-			case '$' : 
-				return (this.index + v) % this.memory_size
-				break
-			case '@': case '<': case '>':
+    get_true_index(v, mod) {
+        switch(mod){
+            case '#':
+                return this.index
+                break
+            case '$' : 
+                return (this.index + v) % this.memory_size
+                break
+            case '@': case '<': case '>':
                 var new_index = (this.index + v) % this.memory_size
-				return (new_index + this.memory[new_index].b) % this.memory_size
-				break
-			case '*': case '{': case '}':		
+                return (new_index + this.memory[new_index].b) % this.memory_size
+                break
+            case '*': case '{': case '}':		
                 var new_index = (this.index + v) % this.memory_size
-				return (new_index + this.memory[new_index].a) % this.memory_size
-				break
-		}
-	}
+                return (new_index + this.memory[new_index].a) % this.memory_size
+                break
+        }
+    }
 
 
-	pre(v, mod){
-		if (mod=='<'){
+    pre(v, mod){
+        if (mod=='<'){
             if (this.memory[this.index + v].b == 0) {
                 this.memory[this.index+v].b = this.memory_size
             }
             else {
                 this.memory[this.index+v].b -= 1
             }
-		}
-		if (mod=='{'){
+        }
+        if (mod=='{'){
             if (this.memory[this.index + v].a == 0) {
                 this.memory[this.index+v].a = this.memory_size
             }
             else {
                 this.memory[this.index+v].a -= 1
             }
-		}
-	}
-
-	post(v,mod){
-		if (mod=='}'){
-			this.memory[this.index+v].a = (this.memory[this.index + v].a + 1) % this.memory_size
-		}
-		if (mod=='>'){
-			this.memory[this.index+v].b = (this.memory[this.index + v].b + 1) % this.memory_size
-		}
-	}
-
-	call(processes, process_index, gen, p){
-
-		this.pre(this.a, this.a_am)
-		this.pre(this.b, this.b_am)
-
-		this._call(processes, process_index, gen, p)
-		
-		this.post(this.a, this.a_am)
-		this.post(this.b, this.b_am)
+        }
     }
 
-	_call(processes, process_index, gen, p){}
+    post(v,mod){
+        if (mod=='}'){
+            this.memory[this.index+v].a = (this.memory[this.index + v].a + 1) % this.memory_size
+        }
+        if (mod=='>'){
+            this.memory[this.index+v].b = (this.memory[this.index + v].b + 1) % this.memory_size
+        }
+    }
+
+    call(processes, process_index, gen, p){
+
+        this.pre(this.a, this.a_am)
+        this.pre(this.b, this.b_am)
+
+        this._call(processes, process_index, gen, p)
+
+        this.post(this.a, this.a_am)
+        this.post(this.b, this.b_am)
+    }
+
+    _call(processes, process_index, gen, p){}
 }
 
 
@@ -102,16 +102,16 @@ with a switch statement, and augments the memory matrix accordingly.
 
 //add
 class Add extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
- 
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
+
     _add(source, target){
         var ret = target + source
         return ret % this.memory_size
     }
 
-	_call(processes, process_index,gen, p){
+    _call(processes, process_index,gen, p){
         var source = this.get_true_index(this.a, this.a_am)
         var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -139,26 +139,26 @@ class Add extends Command {
                 break
         }
         processes[process_index] = (processes[process_index] + 1) % this.memory_size 
-	}
+    }
 }
 
 //dat
 class Dat extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
-	_call(processes, process_index,gen, p){
-		processes.splice(process_index,1)
-	}
+    _call(processes, process_index,gen, p){
+        processes.splice(process_index,1)
+    }
 }
 
 //div
 class Div extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
         this._flag = false
-	}
+    }
 
     _div(source, target, processes, process_index){
         if (source == 0 && !this._flag) {
@@ -169,7 +169,7 @@ class Div extends Command {
         return (target / source) >> 0
     }
 
-	_call(processes, process_index, gen, p){
+    _call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
         var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -200,14 +200,14 @@ class Div extends Command {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size 
         }
         this._flag = false
-	}
+    }
 }
 
 //djn
 class Djn extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
     _cond(cond, processes, process_index, dest) {
         if (cond) {
@@ -218,41 +218,41 @@ class Djn extends Command {
         }
     }
 
-	_call(processes, process_index, gen, p){
-		var dest = this.get_true_index(this.a, this.a_am)
-		var check = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A': case 'BA':
-				this.memory[check].a -= 1
+    _call(processes, process_index, gen, p){
+        var dest = this.get_true_index(this.a, this.a_am)
+        var check = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A': case 'BA':
+                this.memory[check].a -= 1
                 if (this.memory[check].a < 0)
                     this.memory[check].a += this.memory_size
-				this._cond((this.memory[check].a != 0), processes, process_index, dest)
-				break
-			case 'B': case 'AB':
-				this.memory[check].b -= 1
+                this._cond((this.memory[check].a != 0), processes, process_index, dest)
+                break
+            case 'B': case 'AB':
+                this.memory[check].b -= 1
                 if (this.memory[check].b < 0)
                     this.memory[check].b += this.memory_size
-				this._cond((this.memory[check].b != 0), processes, process_index, dest)
-				break
-			case 'I': case 'X': case 'F':
-				this.memory[check].a -= 1
-				this.memory[check].b -= 1
+                this._cond((this.memory[check].b != 0), processes, process_index, dest)
+                break
+            case 'I': case 'X': case 'F':
+                this.memory[check].a -= 1
+                this.memory[check].b -= 1
                 if (this.memory[check].a < 0)
                     this.memory[check].a += this.memory_size
                 if (this.memory[check].b < 0)
                     this.memory[check].b += this.memory_size
-				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
-				break
-		}
-		
-	}
+                this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
+                break
+        }
+
+    }
 }
 
 //jmn
 class Jmn extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
     _cond(cond, processes, process_index, dest) {
         if (cond) {
@@ -263,41 +263,41 @@ class Jmn extends Command {
         }
     }
 
-	_call(processes, process_index, gen, p){
-		var dest = this.get_true_index(this.a, this.a_am)
-		var check = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A': case 'BA':
-				this._cond((this.memory[check].a != 0), processes, process_index, dest)
-				break
-			case 'B': case 'AB':
-				this._cond((this.memory[check].b != 0), processes, process_index, dest)
-				break
-			case 'I': case 'X': case 'F':
-				this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
-				break
-		}
-		
-	}
+    _call(processes, process_index, gen, p){
+        var dest = this.get_true_index(this.a, this.a_am)
+        var check = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A': case 'BA':
+                this._cond((this.memory[check].a != 0), processes, process_index, dest)
+                break
+            case 'B': case 'AB':
+                this._cond((this.memory[check].b != 0), processes, process_index, dest)
+                break
+            case 'I': case 'X': case 'F':
+                this._cond((this.memory[check].a != 0 || this.memory[check].b != 0), processes, process_index, dest)
+                break
+        }
+
+    }
 }
 
 //jmp
 class Jmp extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
-	_call(processes, process_index, gen, p){
-		var destination_index = this.get_true_index(this.a, this.a_am)
-		processes[process_index] = destination_index
-	}
+    _call(processes, process_index, gen, p){
+        var destination_index = this.get_true_index(this.a, this.a_am)
+        processes[process_index] = destination_index
+    }
 }
 
 //jmz
 class Jmz extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
     _cond(cond, processes, process_index, dest) {
         if (cond) {
@@ -308,30 +308,30 @@ class Jmz extends Command {
         }
     }
 
-	_call(processes, process_index, gen, p){
-		var dest = this.get_true_index(this.a, this.a_am)
-		var check = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A': case 'BA':
-				this._cond((this.memory[check].a == 0), processes, process_index, dest)
-				break
-			case 'B': case 'AB':
-				this._cond((this.memory[check].b == 0), processes, process_index, dest)
-				break
-			case 'I': case 'X': case 'F':
-				this._cond((this.memory[check].a == 0 && this.memory[check].b == 0), processes, process_index, dest)
-				break
-		}
-		
-	}
+    _call(processes, process_index, gen, p){
+        var dest = this.get_true_index(this.a, this.a_am)
+        var check = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A': case 'BA':
+                this._cond((this.memory[check].a == 0), processes, process_index, dest)
+                break
+            case 'B': case 'AB':
+                this._cond((this.memory[check].b == 0), processes, process_index, dest)
+                break
+            case 'I': case 'X': case 'F':
+                this._cond((this.memory[check].a == 0 && this.memory[check].b == 0), processes, process_index, dest)
+                break
+        }
+
+    }
 }
 
 //mod
 class Mod extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
         this._flag = false
-	}
+    }
 
     _mod(source, target, processes, process_index){
         if (source == 0 && !this._flag) {
@@ -342,7 +342,7 @@ class Mod extends Command {
         return target % source
     }
 
-	_call(processes, process_index, gen, p){
+    _call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
         var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -373,66 +373,66 @@ class Mod extends Command {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size 
         }
         this._flag = false
-	}
+    }
 }
 
 //mov
 class Mov extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
-	_call(processes, process_index, gen, p){
-		var source = this.get_true_index(this.a, this.a_am)
-		var destination = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A':
-				//moves the A-field of the source into the A-field of the destination
-				this.memory[destination].a = this.memory[source].a 
-				break
-			case 'B':
-				this.memory[destination].b = this.memory[source].b 
-				break
-			case 'AB':
-				this.memory[destination].b = this.memory[source].a 
-				break
-			case 'BA':
-				this.memory[destination].a = this.memory[source].b
-				break
-			case 'I':
+    _call(processes, process_index, gen, p){
+        var source = this.get_true_index(this.a, this.a_am)
+        var destination = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A':
+                //moves the A-field of the source into the A-field of the destination
+                this.memory[destination].a = this.memory[source].a 
+                break
+            case 'B':
+                this.memory[destination].b = this.memory[source].b 
+                break
+            case 'AB':
+                this.memory[destination].b = this.memory[source].a 
+                break
+            case 'BA':
+                this.memory[destination].a = this.memory[source].b
+                break
+            case 'I':
                 var orig = this.memory[source]
-				this.memory[destination] = Object.assign(Object.create(Object.getPrototypeOf(orig)), orig)
+                this.memory[destination] = Object.assign(Object.create(Object.getPrototypeOf(orig)), orig)
                 this.memory[destination].index = destination
                 this.memory[destination].player_id = p
-				break
-			case 'F':
-				this.memory[destination].a = this.memory[source].a 
-				this.memory[destination].b = this.memory[source].b
-				break
-			case 'X':
+                break
+            case 'F':
+                this.memory[destination].a = this.memory[source].a 
+                this.memory[destination].b = this.memory[source].b
+                break
+            case 'X':
                 let [s_a, s_b] = [this.memory[source].a, this.memory[source].b]
-				this.memory[destination].a = s_b
-				this.memory[destination].b = s_a
-				break
-		}
-		// incrementing by one, after the move
-		processes[process_index] = (processes[process_index] + 1) % this.memory_size 
+                this.memory[destination].a = s_b
+                this.memory[destination].b = s_a
+                break
+        }
+        // incrementing by one, after the move
+        processes[process_index] = (processes[process_index] + 1) % this.memory_size 
 
-	}
+    }
 }
 
 //mul
 class Mul extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
     _mul(source, target){
         var ret = target * source
         return ret % this.memory_size
     }
 
-	_call(processes, process_index, gen, p){
+    _call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
         var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -460,7 +460,7 @@ class Mul extends Command {
                 break
         }
         processes[process_index] = (processes[process_index] + 1) % this.memory_size 
-	}
+    }
 }
 
 //seq
@@ -469,14 +469,14 @@ class Seq extends Command {
         super(a, b, a_am, b_am, mod, memory, memory_size)
     }
 
-    _equal() {
-        var len = arguments.length;
-        for (var i = 1; i< len; i++) {
-            // a == b && b == c && c == d
-            if (arguments[i] === null || arguments[i] !== arguments[i-1])
-                return false;
-        }
-        return true;
+    _compare_commands(c1, c2) {
+        if (Object.getPrototypeOf(c1) != Object.getPrototypeOf(c2))
+            return false
+        if (c1.a != c2.a || c1.b != c2.b  || c1.mod != c2.mod)
+            return false
+        if (c1.a_am != c2.a_am || c1.b_am != c2.b_am)
+            return false
+        return true
     }
 
     _compare(cond, processes, process_index) {
@@ -488,7 +488,7 @@ class Seq extends Command {
         }
     }
 
-	_call(processes, process_index, gen, p){
+    _call(processes, process_index, gen, p){
         var acheck = this.get_true_index(this.a, this.a_am)
         var bcheck = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -504,8 +504,17 @@ class Seq extends Command {
             case 'BA':
                 this._compare((this.memory[acheck].b == this.memory[bcheck].a), processes, process_index)
                 break
-            case 'I': case 'X': case 'F':
-                this._compare(this._equal(this.memory[acheck].a, this.memory[acheck].b, this.memory[bcheck].a, this.memory[bcheck].b), processes, process_index)
+            case 'F':
+                var cond = (this.memory[acheck].a == this.memory[bcheck].a) && (this.memory[acheck].b == this.memory[bcheck].b) 
+                this._compare(cond, processes, process_index)
+                break
+            case 'I':
+                var cond = this._compare_commands(this.memory[acheck], this.memory[bcheck])
+                this._compare(cond, processes, process_index)
+                break
+            case 'X': 
+                var cond = (this.memory[acheck].a == this.memory[bcheck].b) && (this.memory[acheck].b == this.memory[bcheck].a) 
+                this._compare(cond, processes, process_index)
                 break
         }
 
@@ -514,56 +523,8 @@ class Seq extends Command {
 
 //slt
 class Slt extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
-
-	_compare(cond, processes, process_index) {
-        if (cond){
-            processes[process_index] = (processes[process_index] + 2) % this.memory_size
-        }
-        else {
-            processes[process_index] = (processes[process_index] + 1) % this.memory_size
-        }
-    }
-
-	_call(processes, process_index, gen, p){
-		var acheck = this.get_true_index(this.a, this.a_am)
-		var bcheck = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A': 
-				this._compare(this.memory[acheck].a < this.memory[bcheck].a, processes, process_index)
-				break
-			case 'B': 
-				this._compare(this.memory[acheck].b < this.memory[bcheck].b, processes, process_index)
-				break
-			case 'AB':
-				this._compare(this.memory[acheck].a < this.memory[bcheck].b, processes, process_index)
-				break
-			case 'BA':
-				this._compare(this.memory[acheck].b < this.memory[bcheck].a, processes, process_index)
-				break
-			case 'I': case 'X': case 'F':
-				console.log('incorrect instruction modifier used for SLT instruction')
-				processes[process_index] = (processes[process_index] + 1) % this.memory_size
-				break
-		}
-	}
-}
-
-//sne
-class Sne extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
-
-    _equal() {
-        var len = arguments.length;
-        for (var i = 1; i< len; i++) {
-            if (arguments[i] === null || arguments[i] !== arguments[i-1])
-                return true;
-        }
-        return false;
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
     }
 
     _compare(cond, processes, process_index) {
@@ -574,52 +535,114 @@ class Sne extends Command {
             processes[process_index] = (processes[process_index] + 1) % this.memory_size
         }
     }
-        
-	_call(processes, process_index, gen, p){
-		var acheck = this.get_true_index(this.a, this.a_am)
-		var bcheck = this.get_true_index(this.b, this.b_am)
-		switch(this.mod){
-			case 'A': 
-				this._compare(this.memory[acheck].a != this.memory[bcheck].a, processes, process_index)
-				break
-			case 'B': 
-				this._compare(this.memory[acheck].b != this.memory[bcheck].b, processes, process_index)
-				break
-			case 'AB':
-				this._compare(this.memory[acheck].a != this.memory[bcheck].b, processes, process_index)
-				break
-			case 'BA':
-				this._compare(this.memory[acheck].b != this.memory[bcheck].b, processes, process_index)
-				break
-			case 'I': case 'X': case 'F':
-                this._compare(this._equal(this.memory[acheck].a, this.memory[acheck].b, this.memory[bcheck].a, this.memory[bcheck].b), processes, process_index)
-				break
-		}
-		
-	}
+
+    _call(processes, process_index, gen, p){
+        var acheck = this.get_true_index(this.a, this.a_am)
+        var bcheck = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A': 
+                this._compare(this.memory[acheck].a < this.memory[bcheck].a, processes, process_index)
+                break
+            case 'B': 
+                this._compare(this.memory[acheck].b < this.memory[bcheck].b, processes, process_index)
+                break
+            case 'AB':
+                this._compare(this.memory[acheck].a < this.memory[bcheck].b, processes, process_index)
+                break
+            case 'BA':
+                this._compare(this.memory[acheck].b < this.memory[bcheck].a, processes, process_index)
+                break
+            case 'I': case 'F':
+                var cond = (this.memory[acheck].a < this.memory[bcheck].a) && (this.memory[acheck].b < this.memory[bcheck].b)
+                this._compare(cond, processes, process_index)
+                break
+            case 'X': 
+                var cond = (this.memory[acheck].a < this.memory[bcheck].b) && (this.memory[acheck].b < this.memory[bcheck].a)
+                this._compare(cond, processes, process_index)
+                break
+        }
+    }
+}
+
+//sne
+class Sne extends Command {
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
+
+    _compare_commands(c1, c2) {
+        if (Object.getPrototypeOf(c1) != Object.getPrototypeOf(c2))
+            return true
+        if (c1.a != c2.a || c1.b != c2.b  || c1.mod != c2.mod)
+            return true
+        if (c1.a_am != c2.a_am || c1.b_am != c2.b_am)
+            return true
+        return false
+    }
+
+    _compare(cond, processes, process_index) {
+        if (cond){
+            processes[process_index] = (processes[process_index] + 2) % this.memory_size
+        }
+        else {
+            processes[process_index] = (processes[process_index] + 1) % this.memory_size
+        }
+    }
+
+    _call(processes, process_index, gen, p){
+        var acheck = this.get_true_index(this.a, this.a_am)
+        var bcheck = this.get_true_index(this.b, this.b_am)
+        switch(this.mod){
+            case 'A': 
+                this._compare(this.memory[acheck].a != this.memory[bcheck].a, processes, process_index)
+                break
+            case 'B': 
+                this._compare(this.memory[acheck].b != this.memory[bcheck].b, processes, process_index)
+                break
+            case 'AB':
+                this._compare(this.memory[acheck].a != this.memory[bcheck].b, processes, process_index)
+                break
+            case 'BA':
+                this._compare(this.memory[acheck].b != this.memory[bcheck].b, processes, process_index)
+                break
+            case 'F':
+                var cond = (this.memory[acheck].a != this.memory[bcheck].a) || (this.memory[acheck].b != this.memory[bcheck].b) 
+                this._compare(cond, processes, process_index)
+                break
+            case 'I':
+                var cond = this._compare_commands(this.memory[acheck], this.memory[bcheck])
+                this._compare(cond, processes, process_index)
+                break
+            case 'X': 
+                var cond = (this.memory[acheck].a != this.memory[bcheck].b) || (this.memory[acheck].b != this.memory[bcheck].a) 
+                this._compare(cond, processes, process_index)
+                break
+        }
+
+    }
 }
 
 //spl
 class Spl extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
-	_call(processes, process_index, gen, p){
-		// new branch
-		var destination_index = this.get_true_index(this.a, this.a_am)
-		processes.splice(process_index+1,0, destination_index)
-		processes[process_index] = (processes[process_index] + 1) % this.memory_size
-		// continue on old shit
-		gen.next()
-	}
+    _call(processes, process_index, gen, p){
+        // new branch
+        var destination_index = this.get_true_index(this.a, this.a_am)
+        processes.splice(process_index+1,0, destination_index)
+        processes[process_index] = (processes[process_index] + 1) % this.memory_size
+        // continue on old shit
+        gen.next()
+    }
 }
 
 //sub
 class Sub extends Command {
-	constructor(a, b, a_am, b_am, mod, memory, memory_size){
-		super(a, b, a_am, b_am, mod, memory, memory_size)
-	}
+    constructor(a, b, a_am, b_am, mod, memory, memory_size){
+        super(a, b, a_am, b_am, mod, memory, memory_size)
+    }
 
     _sub(source, target){
         var ret = target - source
@@ -628,7 +651,7 @@ class Sub extends Command {
         return ret
     }
 
-	_call(processes, process_index, gen, p){
+    _call(processes, process_index, gen, p){
         var source = this.get_true_index(this.a, this.a_am)
         var dest = this.get_true_index(this.b, this.b_am)
         switch(this.mod){
@@ -655,7 +678,7 @@ class Sub extends Command {
                 this.memory[dest].b = this._sub(s_a, d_b)
                 break
 
-        processes[process_index] = (processes[process_index] + 1) % this.memory_size 
+                processes[process_index] = (processes[process_index] + 1) % this.memory_size 
         }
     }
 }
@@ -767,7 +790,7 @@ ADD #4, 3        ; execution begins here
 MOV 2, @2
 JMP -2
 DAT #0, #0
- */
+*/
 $(function(){
     // var memory_length = 8000
     // var memory = []
@@ -864,7 +887,7 @@ $(function(){
             ctx.clearRect(0, 0, c.width,c.height);
             updateCanvas(memory)
             if (--i)
-                  run()
+                run()
             else {
                 i = -1
                 p = -1
@@ -872,30 +895,30 @@ $(function(){
         }, 100)
     }
     //Testing
-    function test(mode, memory) {
-        var memory = init(memory_size)
-        var test_code = [
-            new Mul(3, 2, '#','#', mode, memory, memory_size),
-            new Dat(5, 6, '$', '$', '', memory, memory_size),
-            new Dat(5, 11, '$', '$', '', memory, memory_size)
-        ]
-        var code = [test_code]
-        var players = make_players(memory, code)
-        var [current_list, index] = players[0].next().value
-        address = current_list[index]
-        memory[address].call(current_list, index, players[0], 0)
-        console.log(memory.slice(0,test_code.length + 1))
-        // var [current_list, index] = players[0].next().value
-        // console.log(current_list[0])
-    }
+    // function test(mode, memory) {
+    //     var memory = init(memory_size)
+    //     var test_code = [
+    //         new Sub(1, 2, '#','#', mode, memory, memory_size),
+    //         new Dat(2, 3, '$', '$', '', memory, memory_size),
+    //         new Dat(3, 2, '$', '$', '', memory, memory_size)
+    //     ]
+    //     var code = [test_code]
+    //     var players = make_players(memory, code)
+    //     var [current_list, index] = players[0].next().value
+    //     address = current_list[index]
+    //     memory[address].call(current_list, index, players[0], 0)
+    //     console.log(memory.slice(0,test_code.length + 1))
+    //     // var [current_list, index] = players[0].next().value
+    //     // console.log(current_list)
+    // }
 
-    test('A')
-    test('B')
-    test('BA')
-    test('AB')
-    test('F')
-    test('X')
-    test('I')
+    // test('A')
+    // test('B')
+    // test('BA')
+    // test('AB')
+    // test('F')
+    // test('X')
+    // test('I')
 
     $("#run_button").click(run)
 })
