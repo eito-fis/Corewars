@@ -700,6 +700,7 @@ function* gen(processes) {
             yield [processes, index]
         }
     }
+    yield null
 }
 
 function init(memory_size) {
@@ -721,15 +722,14 @@ function check_memory(memory, start, code_len) {
 
 function set_code(memory, code, player_id) {
     // Find a starting location that doesn't overlap with player code
-    // start = Math.floor(Math.random() * (memory.length - 1))
-    // while (!check_memory(memory, start, code.length)) {
-    //     start = Math.floor(Math.random() * (memory.length - 1))
-    // }
-    // console.log(player_id)
+    start = Math.floor(Math.random() * (memory.length - 1))
+    while (!check_memory(memory, start, code.length)) {
+        start = Math.floor(Math.random() * (memory.length - 1))
+    }
     if (player_id == 0)
+        start = 5
+    else
         start = 0
-    else if (player_id == 1)
-        start = 3
 
     for (i = 0; i < code.length; i++) {
         address = (start + i) % memory.length
@@ -775,6 +775,75 @@ function print(memory, row_length) {
 
 }
 
+function updateCanvas(params){
+    var count = 0
+    let {wn, hn, memory, d1, d2, sl, ctx} = params
+    for (var w_inc=0; w_inc<wn; w_inc++){
+        for (var h_inc=0; h_inc<hn; h_inc++){
+            ctx.beginPath();
+            ctx.strokeStyle = "gray";
+            if(memory[count].player_id == 0)
+                ctx.strokeStyle = "red";
+            else if(memory[count].player_id == 1)
+                ctx.strokeStyle = "blue";
+            ctx.beginPath();
+            ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
+            ctx.stroke();
+            count++
+        }
+    }
+}
+
+function startCanvas(params){
+    var count = 0
+    let {wn, hn, memory, d1, d2, sl, ctx, code} = params
+    for (var w_inc=0; w_inc<wn; w_inc++){
+        for (var h_inc=0; h_inc<hn; h_inc++){
+            ctx.strokeStyle = "gray";
+            ctx.beginPath();
+            ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
+            ctx.stroke();
+        }
+    }
+    params["players"] = make_players(memory, code)
+}
+
+function step(params, i, p) {
+    let {game_length, memory, code, c, ctx, players} = params
+    ret = players[p].next().value
+    if (ret) {
+        [current_list, index] = ret
+        address = current_list[index]
+        memory[address].call(current_list, index, players[p], p)
+
+        ctx.clearRect(0, 0, c.width,c.height);
+        updateCanvas(params)
+
+        if (--i)
+            run(params, i, p)
+        else {
+            params["final_length"] += game_length
+            params["done"] = -1
+        }
+    } else {
+        params["final_length"] += game_length - i + 1
+        params["done"] = (p + 1 == players.length ? 0 : p + 1) 
+    }
+}
+
+function run(params, i, p) {
+    let {game_length, players} = params
+    if (i == -1) {
+        params["done"] = null
+        i = game_length
+    }
+    if (p == -1 || p == players.length - 1)
+        p = 0
+    else 
+        p += 1
+    setTimeout(() => {step(params, i, p)}, 100)
+}
+
 
 
 //code execution 
@@ -792,8 +861,6 @@ JMP -2
 DAT #0, #0
 */
 $(function(){
-    // var memory_length = 8000
-    // var memory = []
     var memory_size = 625
     var memory = init(memory_size)
     var player1_code = [new Mov(0, 1, "$", "$", "I", memory, memory_size, 0)] // array of commands
@@ -803,7 +870,6 @@ $(function(){
         new Dat(0, 0, '$', '$', '', memory, memory_size, 20)]
 
     var code = [player1_code, player2_code]
-    var all_players = make_players(memory, code)
 
     //initializing rectangle matrix
     var c = document.getElementById("myCanvas");
@@ -816,84 +882,40 @@ $(function(){
     var wn = 25
     var hn = 25
     var sl = 5
+    //Done will show how the game ended
+    //-1 if out of time, otherwise the index of the player that won
+    var done = null
+
+    var game_length = 1000
+    var final_length = 0
     /*   
     critical defining functions. 
     here are some useful 
 
     (w-15)/(h-15) * z = y
     */  
-    function updateCanvas(memory){
-        var count = 0
-        // console.log(memory)
-        for (var w_inc=0; w_inc<wn; w_inc++){
-            for (var h_inc=0; h_inc<hn; h_inc++){
-                // console.log(memory[count])
-                // console.log(count)
-                ctx.beginPath();
-                ctx.strokeStyle = "gray";
-                if(memory[count].player_id == 0)
-                    ctx.strokeStyle = "red";
-                else if(memory[count].player_id == 1)
-                    ctx.strokeStyle = "blue";
-                ctx.beginPath();
-                ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
-                ctx.stroke();
-                count++
-            }
-        }
+    params = {
+        "memory_size": memory_size,
+        "memory": memory,
+        "code": code,
+        "c": c,
+        "ctx": ctx,
+        "d1": d1,
+        "d2": d2,
+        "w": w,
+        "h": h,
+        "wn": wn,
+        "hn": hn,
+        "sl": sl,
+        "game_length": game_length,
+        "done": done,
+        "final_length": final_length
     }
 
+              
 
-    function startCanvas(){
-        var count = 0
-        for (var w_inc=0; w_inc<wn; w_inc++){
-            for (var h_inc=0; h_inc<hn; h_inc++){
-                ctx.strokeStyle = "gray";
-                ctx.beginPath();
-                ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
-                ctx.stroke();
-            }
-        }
-    }
-
-    // startCanvas()
-    updateCanvas(memory)
-
-    // // Something to change the value of the matrix,  
-    // function run(){
-    //     for (var i=0; i<memory.length; i++){
-    //         memory[i].transform()
-    //     }
-    //     ctx.clearRect(0, 0, c.width,c.height);
-    //     updateCanvas()
-    // }
-
-    game_length = 1000
-    var i = -1
-    var p = -1
-    players = all_players
-    function run() {
-        if (i == -1)
-            i = game_length
-        if (p == -1 || p == players.length - 1)
-            p = 0
-        else
-            p += 1
-        setTimeout(function() {
-            [current_list, index] = players[p].next().value
-            address = current_list[index]
-
-            memory[address].call(current_list, index, players[p], p)
-            ctx.clearRect(0, 0, c.width,c.height);
-            updateCanvas(memory)
-            if (--i)
-                run()
-            else {
-                i = -1
-                p = -1
-            }
-        }, 100)
-    }
+    startCanvas(params)
+    updateCanvas(params)
     //Testing
     // function test(mode, memory) {
     //     var memory = init(memory_size)
@@ -920,5 +942,5 @@ $(function(){
     // test('X')
     // test('I')
 
-    $("#run_button").click(run)
+    $("#run_button").click(() => {run(params, -1, -1)})
 })
