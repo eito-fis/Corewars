@@ -10,7 +10,7 @@ var secured = require('../middleware/secured')
 * */
 
 router.get('/', secured(),function (req, res, next) {
-    // grabbing user information
+    // grabbing user information to display in a home page
     const {_raw, _json, ...userProfile} = req.user
         .then(userProfile => res.json(userProfile))
         .catch(err => res.status(400).json('Error: ' + err))
