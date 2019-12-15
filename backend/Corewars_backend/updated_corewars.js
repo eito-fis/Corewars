@@ -722,7 +722,7 @@ function check_memory(memory, start, code_len) {
 
 function set_code(memory, code, player_id) {
     // Find a starting location that doesn't overlap with player code
-    start = Math.floor(Math.random() * (memory.length - 1))
+    var start = Math.floor(Math.random() * (memory.length - 1))
     while (!check_memory(memory, start, code.length)) {
         start = Math.floor(Math.random() * (memory.length - 1))
     }
@@ -731,8 +731,8 @@ function set_code(memory, code, player_id) {
     else
         start = 0
 
-    for (i = 0; i < code.length; i++) {
-        address = (start + i) % memory.length
+    for (var i = 0; i < code.length; i++) {
+        var address = (start + i) % memory.length
         memory[address] = code[i]
         memory[address].init(address, player_id)
     }
