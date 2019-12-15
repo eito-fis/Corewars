@@ -15,12 +15,19 @@ require('dotenv').config()
 const app = express()
 const port = process.env.PORT || 8000;
 
+// authorization routing
 const authRouter = require('./routes/auth')
+
+// middleware setup
 const userInViews = require('./middleware/userInViews')
+
+// routing setup
 const indexRouter = require('./routes/index')
-const userRouter = require('./routes/users')
+const userRouter = require('./routes/user')
+const playRouter = require('./routes/play')
 
 
+// authorization set up
 const session = {
     secret: 'LoxodontaElephasMammuthusPalaeoloxodonPrimelephas',
     cookie: {},
@@ -84,7 +91,8 @@ app.use(userInViews())
 
 app.use('/', authRouter)
 app.use('/', indexRouter)
-app.use('/', userRouter)
+app.use('/user', userRouter)
+app.use('/play', playRouter)
 
 
 app.use(cors())
