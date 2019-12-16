@@ -2,6 +2,7 @@
 
 import React, {Component} from "react"
 import { Link } from 'react-router-dom'
+import Canvas from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
@@ -10,13 +11,6 @@ import { Command, Add, Dat, Div, Djn, Jmn,
 export default class Play extends Component {
     constructor() {
         super();
-        var d1 = 5
-        var d2 = 10
-        var w = 1015
-        var h = 815
-        var wn = 25
-        var hn = 25
-        var sl = 5
         var game_length = 1000
         var final_length = 0
 
@@ -31,38 +25,15 @@ export default class Play extends Component {
         var players = this.make_players(memory, code)
 
         this.state = {
-            screen: {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                ratio: window.devicePixelRatio || 1,
-            },
-            ctx: null,
             memory_size: memory_size,
             memory: memory,
             players: players,
-            d1: d1,
-            d2: d2,
-            w: w,
-            h: h,
-            wn: wn,
-            hn: hn,
-            sl: sl,
             game_length: game_length,
             done: null,
             final_length: final_length,
             i: -1,
             p: -1
         }
-    }
-
-    handleResize(value, e){
-        this.setState({
-            screen : {
-                width: window.innerWidth,
-                height: window.innerHeight,
-                ratio: window.devicePixelRatio || 1,
-            }
-        });
     }
 
     * gen(processes) {
@@ -116,52 +87,13 @@ export default class Play extends Component {
         return players
     }
 
-    updateCanvas(){
-        var count = 0
-        let {wn, hn, memory, d1, d2, sl, ctx} = this.state
-        for (var w_inc=0; w_inc<wn; w_inc++){
-            for (var h_inc=0; h_inc<hn; h_inc++){
-                ctx.beginPath();
-                ctx.strokeStyle = "gray";
-                if(memory[count].player_id == 0)
-                    ctx.strokeStyle = "red";
-                else if(memory[count].player_id == 1)
-                    ctx.strokeStyle = "blue";
-                ctx.beginPath();
-                ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
-                ctx.stroke();
-                count++
-            }
-        }
-    }
-
-    startCanvas(){
-        var count = 0
-        let {wn, hn, memory, d1, d2, sl, ctx, code} = this.state
-        for (var w_inc=0; w_inc<wn; w_inc++){
-            for (var h_inc=0; h_inc<hn; h_inc++){
-                ctx.strokeStyle = "gray";
-                ctx.beginPath();
-                ctx.rect(d2+w_inc*(sl+d1), d2+h_inc*(sl+d1), sl, sl);
-                ctx.stroke();
-            }
-        }
-    }
-
     step(i, p) {
         let {game_length, memory, code, c, ctx, players} = this.state
-        let {width, height} = this.state.screen
-        console.log(players)
-        console.log(players[p])
-        console.log(p)
         let ret = players[p].next().value
         if (ret) {
             let [current_list, index] = ret
             let address = current_list[index]
             memory[address].call(current_list, index, players[p], p)
-
-            ctx.clearRect(0, 0, width, height);
-            this.updateCanvas()
 
             if (--i)
                 this.update()
@@ -189,18 +121,12 @@ export default class Play extends Component {
     }
 
     componentDidMount() {
-        const ctx = this.refs.canvas.getContext('2d');
-        console.log(this.state.memory)
-        this.setState({ ctx: ctx }, 
-            () => {
-                this.startCanvas()
-                this.updateCanvas()
-            })
+        this.update()
     }
 
     render(){
         return(
-            <canvas ref="canvas" id="myCanvas" width="1015" height="815"></canvas>
+            <Canvas memory={this.state.memory}></Canvas>
         )
     }
 }
