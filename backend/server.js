@@ -110,6 +110,17 @@ client.connect(err => {
 });
 
 
+// might just not be the strat:
+
+// const uri = process.env.ATLAS_URI
+// mongoose.connect(uri, { useNewUrlParser: true, useCreateIndex: true })
+//     .then(() => {
+//         console.log('connected successfully yay')
+//     })
+//     .catch((err) => {
+//         console.log('NOT CONNECTED ERROR ' + err)
+//     })
+
 
 
 app.listen(port, () => {
