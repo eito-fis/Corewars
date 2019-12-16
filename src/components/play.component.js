@@ -11,7 +11,7 @@ import { Command, Add, Dat, Div, Djn, Jmn,
 export default class Play extends Component {
     constructor() {
         super();
-        var game_length = 1000
+        var game_length = 1
         var final_length = 0
 
         var memory_size = 625
@@ -32,7 +32,8 @@ export default class Play extends Component {
             done: null,
             final_length: final_length,
             i: -1,
-            p: -1
+            p: -1,
+            in_game: false
         }
     }
 
@@ -98,11 +99,11 @@ export default class Play extends Component {
             if (--i)
                 this.update()
             else
-                this.setState({ done: -1, final_length: game_length })
+                this.end(-1, game_length)
         } else {
             let winner = (p + 1 == players.length ? 0 : p + 1) 
             let final_length = this.state.final_length + game_length - i + 1
-            this.setState({ done: winner, final_length: final_length })
+            this.end(winner, final_length)
         }
     }
 
@@ -116,17 +117,35 @@ export default class Play extends Component {
             p = 0
         else 
             p += 1
-        this.setState({ i: i, p: p})
+        this.setState({i: i, p: p})
         setTimeout(() => {requestAnimationFrame(() => {this.step(i, p)})}, 100)
     }
 
+    start() {
+        if (!this.state.in_game)
+            this.setState({in_game: true}, () => {this.update()})
+    }
+
+    end(winner, final_length) {
+        this.setState({done: winner, final_length: final_length, in_game: false})
+    }
+
     componentDidMount() {
-        this.update()
     }
 
     render(){
         return(
-            <Canvas memory={this.state.memory}></Canvas>
+            <div>
+                <div class="container">
+                    <div class = "row text-center">
+                        <button onClick={this.start.bind(this)}>Run Game</button>
+                        <p id="demo">{this.state.done}</p>
+                    </div>
+                </div>
+                <div>
+                    <Canvas memory={this.state.memory}/>
+                </div>
+            </div>
         )
     }
 }

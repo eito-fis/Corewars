@@ -52,6 +52,12 @@ export default class Canvas extends Component {
         }
     }
 
+    componentDidMount() {
+        const canvas = this.canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        this.updateCanvas(canvas, ctx)
+    }
+
     componentDidUpdate() {
         const canvas = this.canvasRef.current;
         const ctx = canvas.getContext('2d');
