@@ -23,7 +23,7 @@ function(user, context, callback) {
         .catch(()=>{
             const nickname = user.nickname
             const emails = user.email
-            const user_id = user.user_id
+            const user_id = user.user_id.substring(6)
             const dateCreated = user.created_at
             const level = 1
             const totalPlayTime = 0
@@ -34,7 +34,7 @@ function(user, context, callback) {
             const newUser = {nickname, emails, user_id, dateCreated, level, totalPlayTime, collection, lastPlayed}
 
             // make an axios post request to submit new user
-            axios.post(process.env.DOMAIN + '/users/viewstudents', newUser)
+            axios.post(process.env.DOMAIN + '/users/createnewuserunsecured', newUser)
 
             //check nonempty rules
             return callback(null, user, context);
