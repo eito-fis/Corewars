@@ -11,7 +11,7 @@ const userSchema = new Schema({
         dateCreated: {type: Date, required: true},
         level: {type: Number, required: true},
         totalPlayTime: {type: Number, required: true},
-        collection: {type: Array, required: true},
+        warriorCollection: {type: Array, required: true},
         lastPlayed: {type: Date, required: true},
     },
     {timestamps: true,}

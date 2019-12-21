@@ -1,6 +1,8 @@
 
 //main express server file
 
+// original adi
+
 const express = require('express')
 const cors = require('cors')
 const mongoose = require('mongoose')
@@ -13,7 +15,7 @@ const Auth0Strategy = require('passport-auth0')
 require('dotenv').config()
 
 const app = express()
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 3000;
 
 // authorization routing
 const authRouter = require('./routes/auth')

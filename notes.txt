@@ -22,6 +22,10 @@ coding
 
 testing / debugging
 
+    fix auth
+
+    test api?
+
     One of the most widespread 'unsure functions' is being able to retreive a MGDB user based on their auth0 id
 
     Another widespread 'unsure function is this:

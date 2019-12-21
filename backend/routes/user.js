@@ -53,7 +53,7 @@ router.post('/createnewuserunsecured', (req,res, next)=>{
     const dateCreated = req.body.dateCreated
     const level = req.body.level
     const totalPlayTime = req.body.totalPlayTime
-    const collection = req.body.collection
+    const warriorCollection = req.body.warriorCollection
     const lastPlayed = req.body.lastPlayed
 
     const newUser = new User({nickname, emails, user_id, dateCreated, level, totalPlayTime, collection, lastPlayed})

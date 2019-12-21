@@ -44,7 +44,7 @@ router.post('/new/', secured(), (req, res, next)=>{
     // creates new warrior
 
     // pushing to the collection
-    let collection = userProfile.collection
+    let collection = userProfile.warriorCollection
     let newCollection = collection.push(newWarrior)
 
     // edits the user in question
@@ -79,7 +79,7 @@ router.post('/edit/', secured(), (req, res, next)=>{
     // creates new warrior
 
     // pushing to the collection
-    let collection = userProfile.collection
+    let collection = userProfile.warriorCollection
     collection[collectionIndex] = newWarrior
 
     // edits the user in question
@@ -87,7 +87,7 @@ router.post('/edit/', secured(), (req, res, next)=>{
     // again, this needs to be tested!!! :( LOL
     User.find({user_id: userProfile.user_id.substring(6)}, null, { skip: 10 }) // this is probably not correct
         .then(user=>{
-            user.collection = collection
+            user.warriorCollection = collection
             user.save()
                 .then(() => res.json('Warrior Added!'))
                 .catch(err => res.status(400).json('Error: ' + err))

@@ -45,7 +45,7 @@ export default class UserComponent extends Component {
                 </div>
                 <div className="row">
                     <div className="col-4">
-                        // display top warrior with a link to click via a bootstrap card via MGDB user information
+                        {/*// display top warrior with a link to click via a bootstrap card via MGDB user information*/}
                         <h3>Thanks for checking us out!</h3>
                         <h5>If this is your first time on our webapp, please verify your user ID with the verify button below!</h5>
                         <h5>Otherwise, please ignore the 'Verify' Button. </h5>
@@ -61,7 +61,7 @@ export default class UserComponent extends Component {
                 </div>
                 <div className="row">
                     <div className="col-12">
-                        // button that links to Play
+                        {/*// button that links to Play*/}
 
                         <h3>Play the Game here!</h3>
                         <Link to="/play/">
