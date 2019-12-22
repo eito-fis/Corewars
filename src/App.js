@@ -19,6 +19,7 @@ function App() {
   return (
       <Router>
         <div className='container' >
+=======
             <Navbar />
             {/* Routing Setup*/}
             <Route path="/" exact component={indexComponent} />
