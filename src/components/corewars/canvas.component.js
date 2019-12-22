@@ -15,9 +15,9 @@ const COLUMNS = 25
 const CELL_SIZE = (WIDTH / COLUMNS > HEIGHT / ROWS ?
     Math.floor(HEIGHT / ROWS) : Math.floor(WIDTH / COLUMNS))
 const X_OFFSET = Math.floor((WIDTH - CELL_SIZE * COLUMNS) / 2)
-const Y_OFFSET = Math.floor((HEIGHT- CELL_SIZE * ROWS) / 2)
+const Y_OFFSET = Math.floor((HEIGHT - CELL_SIZE * ROWS) / 2)
 
-class Cell extends Component {
+export default class Cell extends Component {
     render() {
         const { index, player_id } = this.props
         const x = Math.floor(index / ROWS)
@@ -43,19 +43,6 @@ class Cell extends Component {
                     backgroundColor: `${bg_color}`
                 }}
             />
-        )
-    }
-}
-
-export default class Canvas extends Component {
-    render() {
-        const memory = this.props.memory
-        return (
-            <div className="Board" style={{width: WIDTH, height: HEIGHT}}>
-                {memory.map(cell => (
-                    <Cell index={cell.index} player_id={cell.player_id} key={cell.index}/>
-                ))}
-            </div>
         )
     }
 }

@@ -2,11 +2,14 @@
 
 import React, {Component} from "react"
 import { Link } from 'react-router-dom'
-import Canvas from  './corewars/canvas.component'
+import Cell from  './corewars/canvas.component'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
     Slt, Sne, Spl, Sub } from  './corewars/instructions'
 
+
+const HEIGHT = 600
+const WIDTH = 800
 
 export default class Play extends Component {
     constructor() {
@@ -136,8 +139,16 @@ export default class Play extends Component {
     render(){
         return(
             <div class="container row text-center">
-                <div>
-                    <Canvas memory={this.state.memory}/>
+                <div className="Board" style={{height: HEIGHT, width: WIDTH}}>
+                    {this.state.memory.map(cell => (
+                        <Cell
+                            height = {HEIGHT}
+                            width = {WIDTH}
+                            player_id = {cell.player_id}
+                            index = {cell.index}
+                            key = {cell.index}
+                        />
+                    ))}
                 </div>
                 <div class = "row text-center">
                     <button class="btn btn-dark" onClick={this.start.bind(this)}>Run Game</button>
