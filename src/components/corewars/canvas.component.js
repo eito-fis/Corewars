@@ -1,6 +1,6 @@
 //React play page
 
-import React, {Component} from "react"
+import React, {PureComponent} from "react"
 import { Link } from 'react-router-dom'
 import { Command, Add, Dat, Div, Djn, Jmn,
     Jmp, Jmz, Mod, Mov, Mul, Seq,
@@ -17,8 +17,9 @@ const CELL_SIZE = (WIDTH / COLUMNS > HEIGHT / ROWS ?
 const X_OFFSET = Math.floor((WIDTH - CELL_SIZE * COLUMNS) / 2)
 const Y_OFFSET = Math.floor((HEIGHT - CELL_SIZE * ROWS) / 2)
 
-export default class Cell extends Component {
+export default class Cell extends PureComponent {
     render() {
+        console.log("Rendered")
         const { index, player_id } = this.props
         const x = Math.floor(index / ROWS)
         const y = index % ROWS
