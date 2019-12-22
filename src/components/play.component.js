@@ -11,7 +11,7 @@ import { Command, Add, Dat, Div, Djn, Jmn,
 export default class Play extends Component {
     constructor() {
         super();
-        var game_length = 1
+        var game_length = 1000
         var final_length = 0
 
         var memory_size = 625
@@ -135,16 +135,12 @@ export default class Play extends Component {
 
     render(){
         return(
-            <div>
-                <div class="container">
-                    <div class = "row text-center">
-                        <button onClick={this.start.bind(this)}>Run Game</button>
-                        <p id="demo">{this.state.done}</p>
-                    </div>
+            <div class="container row text-center">
+                <div class = "row text-center">
+                    <button class="btn btn-dark" onClick={this.start.bind(this)}>Run Game</button>
+                    <p id="demo">{this.state.done}</p>
                 </div>
-                <div>
-                    <Canvas memory={this.state.memory}/>
-                </div>
+                <Canvas memory={this.state.memory}/>
             </div>
         )
     }
