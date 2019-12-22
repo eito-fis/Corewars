@@ -136,11 +136,13 @@ export default class Play extends Component {
     render(){
         return(
             <div class="container row text-center">
+                <div>
+                    <Canvas memory={this.state.memory}/>
+                </div>
                 <div class = "row text-center">
                     <button class="btn btn-dark" onClick={this.start.bind(this)}>Run Game</button>
                     <p id="demo">{this.state.done}</p>
                 </div>
-                <Canvas memory={this.state.memory}/>
             </div>
         )
     }
