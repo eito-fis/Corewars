@@ -1,0 +1,84 @@
+
+things to do:
+
+coding
+    corewars game backend matrix component UI
+    build MGDB user verification component
+    edit play routing
+    confirm index routing
+    react frontend for user & play
+    [delete user feature? ]
+
+    eamon questions:
+    how to have 2 different components based on logged in or not (specifically for index)
+    play and edit (whether or not to use same component but 'different inputs')
+    should edit url include warrior index or id?
+
+    [code leaderboard]
+
+
+
+    WORRY ABOUT LEARNING
+
+testing / debugging
+
+    fix auth
+
+    test api?
+
+    One of the most widespread 'unsure functions' is being able to retreive a MGDB user based on their auth0 id
+
+    Another widespread 'unsure function is this:
+        const {_raw, _json, ...userProfile} = req.user
+                .then(userProfile => res.json(userProfile))
+                .catch(err => res.status(400).json('Error: ' + err))'
+    userprofile may not actually be returned as a json... it's definetly returning the entire thing
+    test authorization
+    test update profile
+    test mongoose connect
+        update IP address blacklist
+        (maybe use CORS)
+    test create new profile with students
+
+    after initial testing, retreive and include MGDB user specific information in state
+
+
+
+
+
+
+
+Home page
+    play button, create my profile, [basic match history]
+
+
+user
+    /
+        view user statistics
+        steps
+            comopnent did mount
+            component methods
+            jsx + bootstrap
+    [/viewstudents
+        displays all students]
+    /updateprofile
+        fields to update profile, displays original profile in fields
+    /createnewusersecured
+        takes auth0 user values and create a default mongo user
+
+play
+    /
+        View collection of warriors, view all commands in a specific warrior
+    /edit
+        edit a warrior (UI)
+    /new
+        create a new warrior
+        adds a warrior to the collection
+
+index
+    /
+        verify user
+        access user profile
+        play button
+
+
